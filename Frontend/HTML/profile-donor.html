@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+</head>
+
+<!-------------------------------file preview function------------------->
+
+<script>
+    function doPrev(refFile, prevImg) {
+        const [file] = refFile.files
+        if (file) {
+            prevImg.src = URL.createObjectURL(file)
+        }
+    }
+
+    <!---------------------------save button------------------>
+    $(document).ready(function () {
+        $("#logout").click(function () {  // logout code and give id in logout button
+            localStorage.removeItem("activeKuch");
+            location.href = "index.html";
+        })
+
+        $("#txtEmail").blur(function () {
+            var email = $(this).val();
+            var obj = {
+                type: "get",
+                url: "/checkmail",
+                data: {
+                    kuchEmail: email
+                }
+            }
+            $.ajax(obj).done(function (resp) {
+                // alert(resp);
+                $("#star").html(resp);
+            }).fail(function (err) {
+                // alert(err);
+                $("#star").html(err);
+            })
+        });
+
+        //===============================
+
+        //==============================
+        $("#txtfetch").click(doSearch);
+
+        function doSearch() {
+            var emailKu = $("#txtEmail").val();
+            var obj = {
+                type: "get",
+                url: "/getrecords",
+                data: {
+                    kuchEmail: emailKu
+                }
+            }
+
+            $.ajax(obj).done(function (respJSONKuch) {
+                // alert(JSON.stringify(respJSONKuch));//:-)
+                $("#txtName").val(respJSONKuch[0].name)
+                $("#txtmob").val(respJSONKuch[0].mobile);
+                $("#txtadd").val(respJSONKuch[0].address);
+                $("#txtcity").val(respJSONKuch[0].city);
+                $("#txtid").val(respJSONKuch[0].idproof);
+                $("#txtfrm").val(respJSONKuch[0].frm);
+                $("#txtto").val(respJSONKuch[0].too);
+
+
+                $("#imgPrev").prop("src", "uploads/" + respJSONKuch[0].pic);
+
+
+
+
+            }).fail(function (errKuch) {
+                alert(errKuch)
+                //$("#res").html(respKuch);
+            })
+        }
+
+        function setActiveUser() {
+            if (localStorage.getItem("activeKuch") == undefined) //logout code back nhi hoga
+            {
+                location.href = "index.html";
+                return;
+            }
+            var au = localStorage.getItem("activeKuch");
+
+            $("#txtEmail").val(au);
+        }
+        setActiveUser();
+
+
+
+    });
+
+</script>
+
+<!------------------------------------------------------------------------->
+
+<body>
+
+
+    <!---------------Navbar----------------------->
+
+    <nav class="navbar" style="background-color:#FFFACD;">
+        <div class="container-fluid">
+            <img src="pics/Navbarlogo-2.png" alt="Logo" width="90" height="80" class="d-inline-block align-text-top">
+            <a class="navbar-brand">
+                <h2 style="font-family:Georgia, 'Times New Roman', Times, serif">MY PROFILE</h2>
+            </a>
+            <form class="d-flex" role="search">
+                <button class="btn btn-outline-primary" type="submit" id="logout">Logout</button>
+
+            </form>
+        </div>
+    </nav><br>
+
+    <!----------------------------------------------->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row">
+
+                        <div class="col-md-10">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Email address</label><span
+                                    id="star"></span>
+                                <input type="email" class="form-control" id="txtEmail" name="txtEmail"
+                                    aria-describedby="emailHelp">
+
+                                <div id="emailHelp" class="form-text"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mt-4">
+                            <button type="button" id="txtfetch" class="btn btn-outline-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="txtName" name="txtName">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="exampleInputPassword1" class="form-label">mobile</label>
+                            <input type="text" class="form-control" id="txtmob" name="txtmob">
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 ">
+
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="txtadd" name="txtadd"
+                                    aria-describedby="emailHelp">
+                                <div id="emailHelp" class="form-text"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">City</label>
+                                <input type="text" class="form-control" id="txtcity" name="txtcity"
+                                    aria-describedby="emailHelp">
+                                <div id="emailHelp" class="form-text"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="form-select" aria-label="Default select example" name="txtid">
+                                <option selected>ID-Proof</option>
+                                <option>Voter-ID</option>
+                                <option>Pancard</option>
+                                <option>Aadhar card</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="file" onchange="doPrev(this,imgPrev)" name="ppic" accept="image/*">
+                        </div>
+
+                        <div class="col-md-4">
+                            <img src="" id="imgPrev" alt="" width="180" height="140">
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <p>
+                                Availability Hours->
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <select class="form-select" aria-label="Default select example" name="txtfrm" id="txtfrm">
+                                <option selected>From</option>
+                                <option>10:00 AM</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <select class="form-select" aria-label="Default select example" name="txtto" id="txtto">
+                                <option selected>To</option>
+                                <option>8:00 PM</option>
+                            </select>
+                        </div>
+
+
+                    </div><br><br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-outline-primary" formaction="/update">Update</button>
+                        </div>
+
+                    </div>
+
+
+            </div><br>
+
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

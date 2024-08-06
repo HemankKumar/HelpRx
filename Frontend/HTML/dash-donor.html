@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $("#logout").click(function(){  // logout code and give id in logout button
+            localStorage.removeItem("activeKuch");
+            location.href="index.html";
+          })
+
+           
+            $("#upd").click(function () {
+
+                var email = $("#txtemail").val();
+                var oldpass = $("#txtpwdo").val();
+                var newpass = $("#txtpwdn").val();
+                var confpass = $("#txtpwdc").val();
+                if (oldpass != newpass) {
+                    if (newpass == confpass) {
+                        var obj = {
+                            type: "get",
+                            url: "/setting",
+                            data: {
+                                kuchemail: email,
+                                kucholdpass: oldpass,
+                                kuchnewpass: newpass,
+                                kuchconfpass: confpass
+
+
+                            }
+
+
+                        }
+                        $.ajax(obj).done(function (resp) {
+                            $("#spn").html(resp)
+
+
+                        }).fail(function (err) {
+                            $("#spn").html(err)
+                        })
+
+                    }
+                    else {
+                        alert("pass do not match");
+                    }
+                }
+                else {
+                    alert("old pass is same as new pass");
+                }
+
+
+
+
+
+
+            })
+
+            <!-----------------automatic email filling on top------------------------>
+
+            function setActiveUser() {
+
+                if(localStorage.getItem("activeKuch")==undefined) //logout code back nhi hoga
+            {
+                location.href="index.html";
+                return;
+            }
+                var au = localStorage.getItem("activeKuch");
+                $("#spen").html(au);//navbar mai value ayegi
+                $("#txtemail").val(au);//all email box mai emailid ayegi
+            }
+            setActiveUser();
+
+            
+
+
+
+        })
+
+    </script>
+
+    <style>
+        .card {
+            margin-right: 40px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!--------navbar------------------------------------------>
+
+    <nav class="navbar" style="background-color:#FFFACD;">
+        <div class="container-fluid">
+            <img src="pics/Navbarlogo-2.png" alt="Logo" width="90" height="80" class="d-inline-block align-text-top">
+
+
+            <a class="navbar-brand">
+                <span id="spen">*hehh</span>
+
+            </a>
+            <form class="d-flex" role="search">
+                <button class="btn btn-outline-primary" type="submit" id="logout" >Logout</button>
+
+            </form>
+        </div>
+    </nav><br><br><br><br>
+
+
+    <!---------------------------------------------------------->
+
+    <!--------------------------Cards--------------------------------->
+    <div class="container">
+        <div class="row">
+            <div class="card" style="width: 18rem ;">
+                <img src="pics/male-avatar.gif" class="card-img-top" alt="Sorry">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"><b style="font-family:Georgia, 'Times New Roman', Times, serif">MAKE YOUR
+                            PROFILE</b></p>
+                    <a href="/profile-donor.html" class="btn btn-primary">
+                        <center>Profile</center>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="width: 18rem;">
+                <img src="pics/preventive-health-care.gif" class="card-img-top" alt="Sorry">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"><b style="font-family:Georgia, 'Times New Roman', Times, serif">DONATE
+                            MEDICINES</b></p>
+                    <a href="/availmedicine.html" class="btn btn-primary">
+                        <center>Avail.medicine</center>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="width: 18rem;">
+                <img src="pics/manager-3.gif" class="card-img-top" alt="Sorry">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"><b style="font-family:Georgia, 'Times New Roman', Times, serif">MANAGE
+                            MEDICINES</b></p>
+                    <a href="/med-manager.html" class="btn btn-primary">
+                        <center>Med.manager</center>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="width: 18rem;">
+                <img src="pics/setting-logo-2.png" class="card-img-top" alt="Sorry" height="260px">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"><B style="font-family:Georgia, 'Times New Roman', Times, serif">CHANGE
+                            SETTINGS</B></p>
+                    <a href="#" class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        <center>Settings</center>
+
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!------------------------------------------------------------------->
+
+    <!---------------------Modal-setting button-------------------------------->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#FBE7A1">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><b
+                            style="font-family:Georgia, 'Times New Roman', Times, serif">CHANGE PASSWORD</b></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 offset-3">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Email ID</label>
+                                    <input type="email" class="form-control" id="txtemail" name="txtemail"
+                                        aria-describedby="emailHelp">
+                                    <div id="emailHelp" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label"> Old Password</label>
+                                    <input type="password" class="form-control" id="txtpwdo" name="txtpwdo">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label"> New Password</label>
+                                    <input type="password" class="form-control" id="txtpwdn" name="txtpwdn">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label"> Confirm Password</label>
+                                    <input type="password" class="form-control" id="txtpwdc" name="txtpwdc">
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2 offset-5">
+                                <button type="submit" id="upd" class="btn btn-primary btn-lg">Update</button>
+                                <span id="spn"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
